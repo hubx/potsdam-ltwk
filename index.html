@@ -24,15 +24,25 @@ ret += accentMap[ term.charAt(i) ] || term.charAt(i);
 }
 return ret;
 };
-$( "#streets" ).autocomplete({
+var d = $( "#streets" ).autocomplete({
 source: function( request, response ) {
 var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
 response( $.grep( streets, function( value ) {
 value = value.label || value.value || value;
 return matcher.test( value ) || matcher.test( normalize( value ) );
 }) );
-}
+},
 });
+d.data("ui-autocomplete")._renderItem = function( ul, item ) {
+return $( "<li>" )
+.attr( "data-value", item.value )
+.addClass(item.value.match(/WK\ \d\d/)[0].replace(" ","-"))
+.append( $( "<a>" ).text( item.label ) )
+.appendTo( ul );
+};
+
+
+
 });
 </script>
 </head>
