@@ -1562,3 +1562,35 @@ streets = ["Ahornstr. gesamt  -  WK 21",
 "Zur Historischen Mühle gesamt  -  WK 21",
 "Zur Königlichen Hofbrauerei gesamt  -  WK 22",
 "Zur Nuthe ung. 1-31 ; ger. 2-32  -  WK 22"]
+
+$(function() {
+	var accentMap = {
+		"ä": "a",
+		"ö": "o",
+		"ü": "u",
+		"ß": "ss",
+	};
+	var normalize = function( term ) {
+		var ret = "";
+		for ( var i = 0; i < term.length; i++ ) {
+			ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+		}
+		return ret;
+	};
+	var d = $( "#streets" ).autocomplete({
+		source: function( request, response ) {
+			var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
+			response( $.grep( streets, function( value ) {
+				value = value.label || value.value || value;
+				return matcher.test( value ) || matcher.test( normalize( value ) );
+			}) );
+		},
+	});
+	d.data("ui-autocomplete")._renderItem = function( ul, item ) {
+		return $( "<li>" )
+		.attr( "data-value", item.value )
+		.addClass(item.value.match(/WK\ \d\d/)[0].replace(" ","-"))
+		.append( $( "<a>" ).text( item.label ) )
+		.appendTo( ul );
+	};
+});
