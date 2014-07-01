@@ -1589,7 +1589,7 @@ $(function() {
 	d.data("ui-autocomplete")._renderItem = function( ul, item ) {
 		return $( "<li>" )
 		.attr( "data-value", item.value )
-		.addClass(item.value.match(/WK\ \d\d/)[0].replace(" ","-"))
+		.addClass(item.value.slice(-5).replace(" ","-"))
 		.append( $( "<a>" ).text( item.label ) )
 		.appendTo( ul );
 	};
